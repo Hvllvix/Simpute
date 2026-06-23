@@ -1,0 +1,15 @@
+Skills/
+
+__pycache__/
+*.pyc
+*.py[cod]
+*.egg-info/
+simpute.egg-info/
+.eggs/
+dist/
+build/
+.pytest_cache/
+.venv/
+venv/
+catboost_info/
+delete/
