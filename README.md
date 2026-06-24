@@ -163,4 +163,3 @@ python scripts/generate_plots.py
 ## License
 
 MIT
-```
