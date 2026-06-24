@@ -1,6 +1,6 @@
-# Simple Imputation
+# Smart Imputation
 
-**Simpute** (**sim**ple + im**pute**) is an adaptive missing-value imputation library for tabular data. Instead of applying one global strategy to every column, it profiles each feature, selects a tailored model, and imputes columns sequentially so earlier fills inform later ones.
+**Simpute** is an adaptive missing-value imputation library for tabular data. Instead of applying one global strategy to every column, it profiles each feature, selects a tailored model, and imputes columns sequentially so earlier fills inform later ones.
 
 Install from PyPI as `simpute`. Source and releases live at [github.com/Hvllvix/Simpute](https://github.com/Hvllvix/Simpute).
 
