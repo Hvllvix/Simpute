@@ -13,3 +13,12 @@ build/
 venv/
 catboost_info/
 delete/
+
+# Testing and Coverage
+.coverage
+htmlcov/
+.tox/
+
+# OS Specific
+.DS_Store
+Thumbs.db

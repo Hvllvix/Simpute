@@ -8,7 +8,7 @@ import warnings
 import numpy as np
 import pandas as pd
 import pytest
-from sklearn.metrics import accuracy_score, mean_squared_error
+from sklearn.metrics import accuracy_score, mean_absolute_error, mean_squared_error
 
 from simpute import Simpute
 from simpute.utils import HIGH_MISSING_THRESHOLD, isnumerical, profilecolumn
@@ -38,6 +38,70 @@ def loadgroundtruth() -> pd.DataFrame:
   if not GROUNDTRUTH.exists() :
     raise FileNotFoundError(f"Ground-truth dataset not found: {GROUNDTRUTH}")
   return pd.read_csv(GROUNDTRUTH)
+
+
+def collect_guard_metrics(
+  groundtruth: pd.DataFrame,
+  imputablecolumns: list[str],
+) -> list[dict[str, object]]:
+  metrics: list[dict[str, object]] = []
+  for column in imputablecolumns :
+    masked, truth = maskcolumns(
+      groundtruth,
+      columns = [column],
+      ratio = MASKRATIO,
+      seed = GUARDSEED + hash(column) % 10000,
+      exclude = EXCLUDECOLUMNS,
+    )
+    imputer = Simpute(exclude = EXCLUDECOLUMNS, randomstate = GUARDSEED)
+    result = imputer.fit_transform(masked)
+    actual = truth[column]
+    predicted = result.loc[actual.index, column]
+    modelname = imputer.getmodelselection().get(column, "n/a")
+    if isnumerical(groundtruth[column]) :
+      actualnum = actual.astype(float)
+      prednum = predicted.astype(float)
+      metrics.append({
+        "column" : column,
+        "kind" : "continuous",
+        "metric" : "MAE",
+        "value" : float(mean_absolute_error(actualnum, prednum)),
+        "model" : modelname,
+      })
+    else :
+      actualcat = actual.astype(bool) if groundtruth[column].dtype == bool else actual
+      predcat = predicted.astype(bool) if groundtruth[column].dtype == bool else predicted
+      metrics.append({
+        "column" : column,
+        "kind" : "nominal",
+        "metric" : "Accuracy",
+        "value" : float(accuracy_score(actualcat, predcat)),
+        "model" : modelname,
+      })
+  return metrics
+
+
+def print_guard_summary(metrics: list[dict[str, object]]) -> None:
+  if not metrics :
+    return
+  width = max(len(str(row["column"])) for row in metrics)
+  width = max(width, len("column"))
+  header = f"+{'-' * (width + 2)}+{'-' * 14}+{'-' * 12}+{'-' * 22}+"
+  print("\nSimpute Guard Firewall -- Metric Summary")
+  print(header)
+  print(f"| {'column'.ljust(width)} | {'kind'.ljust(12)} | {'metric'.ljust(10)} | {'value'.ljust(20)} |")
+  print(header)
+  for row in metrics :
+    value = f"{row['value']:.4f}" if row["metric"] == "MAE" else f"{row['value']:.2%}"
+    print(
+      f"| {str(row['column']).ljust(width)} | "
+      f"{str(row['kind']).ljust(12)} | "
+      f"{str(row['metric']).ljust(10)} | "
+      f"{value.ljust(20)} |"
+    )
+  print(header)
+  modelmap = ", ".join(f"{row['column']}={row['model']}" for row in metrics)
+  print(f"Models: {modelmap}\n")
 
 
 class TestGuardIntegrity:
@@ -192,3 +256,14 @@ class TestGuardIntegrity:
     imputer = Simpute(exclude = EXCLUDECOLUMNS)
     with pytest.raises(RuntimeError, match = "not fitted") :
       imputer.transform(groundtruth)
+
+
+if __name__ == "__main__" :
+  import sys
+
+  exitcode = pytest.main([__file__, "-v"])
+  if exitcode == 0 :
+    groundtruth = loadgroundtruth()
+    columns = [column for column in groundtruth.columns if column not in EXCLUDECOLUMNS]
+    print_guard_summary(collect_guard_metrics(groundtruth, columns))
+  sys.exit(exitcode)

@@ -9,16 +9,20 @@ description = "Smart Impute: adaptive per-column missing value imputation"
 readme = "README.md"
 license = {text = "MIT"}
 requires-python = ">=3.10"
-authors = [{name = "Simpute Contributors"}]
-keywords = ["imputation", "missing-data", "machine-learning", "sklearn"]
+authors = [{name = "Hvllvix"}]
+maintainers = [{name = "Hvllvix"}]
+keywords = ["imputation", "missing-data", "machine-learning", "sklearn", "simpute"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Science/Research",
     "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
 dependencies = [
@@ -31,11 +35,13 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=7.0"]
+dev = ["pytest>=7.0", "matplotlib>=3.7", "seaborn>=0.13"]
 
 [project.urls]
-Homepage = "https://github.com/simpute/simpute"
-Repository = "https://github.com/simpute/simpute"
+Homepage = "https://github.com/Hvllvix/Simpute"
+Repository = "https://github.com/Hvllvix/Simpute"
+Documentation = "https://github.com/Hvllvix/Simpute#readme"
+"Bug Tracker" = "https://github.com/Hvllvix/Simpute/issues"
 
 [tool.setuptools.packages.find]
 where = ["."]
