@@ -10,13 +10,13 @@ Install from PyPI as `simpute`. Source and releases live at [github.com/Hvllvix/
 
 Most imputers pick a single method (mean, median, MICE, KNN) for the whole table. Real datasets mix binary flags, low-cardinality categories, high-cardinality text-like fields, skewed counts, and smooth continuous variables. Simpute treats each column on its own terms.
 
-| Approach | Simpute |
-|----------|---------|
-| Strategy | Per-column profiling and model routing |
-| API | Scikit-learn `fit` / `transform` / `fit_transform` |
-| Models | LightGBM, CatBoost, logistic/SVM, KNN, Bayesian Ridge, Extra Trees |
-| Safety | Guard test suite with ground-truth verification |
-| Warnings | Flags columns above 70% missingness |
+| Core Architectural Dimension | Simpute Engine Standard |
+| :--- | :--- |
+| **Profiling Strategy** | Granular per-column analysis and dynamic routing |
+| **API Compliance** | Native Scikit-learn interface (`fit` / `transform` / `fit_transform`) |
+| **Algorithmic Suite** | LightGBM, CatBoost, Regularized Logistic/SVC, KNN, Bayesian Ridge, Extra Trees |
+| **System Integrity** | Integrated firewall guard suite featuring ground-truth precision verification |
+| **Fault Tolerance** | Automated warnings and flags for columns exceeding 70% missingness thresholds |
 
 ---
 
@@ -29,7 +29,7 @@ pip install simpute
 Development install with tests and plotting extras:
 
 ```bash
-git clone https://github.com/Hvllvix/Simpute.git
+git clone [https://github.com/Hvllvix/Simpute.git](https://github.com/Hvllvix/Simpute.git)
 cd Simpute
 pip install -e ".[dev]"
 ```
@@ -69,18 +69,19 @@ Sequential imputation means numerical columns are generally filled before catego
 
 ## Model Selection
 
-| Column profile | Candidate models |
-|----------------|------------------|
-| High-cardinality categorical | CatBoost Classifier, LightGBM Classifier |
-| Low-cardinality / binary categorical | Logistic Regression, Linear SVC |
-| Large numerical tables (1000+ rows) | LightGBM Regressor, Extra Trees Regressor |
-| Skewed or discrete numerical | LightGBM Regressor, Extra Trees Regressor |
-| Normal / uniform continuous | KNN Regressor, Bayesian Ridge |
+| Target Column Profile | Underlying Statistical Property | Optimized Backend Algorithm |
+| :--- | :--- | :--- |
+| **High-Cardinality Categorical** | Large nominal domains, text-like properties | `CatBoostClassifier` / `LightGBMClassifier` |
+| **Low-Cardinality / Binary** | Binary indicators, low unique nominal categories | `LogisticRegression` (L2) / `LinearSVC` |
+| **Large Numerical Tables** | Datasets exceeding 1,000 observations | `LightGBMRegressor` / `ExtraTreesRegressor` |
+| **Skewed / Discrete Numerical** | Long-tailed metrics, highly unbalanced distributions | `LightGBMRegressor` / `ExtraTreesRegressor` |
+| **Normal / Uniform Continuous** | Symmetric, un-skewed numerical continuous shapes | `KNNRegressor` / `BayesianRidge` |
 
 Inspect the chosen backend per column after fitting:
 
 ```python
 imputer.getmodelselection()
+
 # {'Pre_Semester_GPA': 'LGBMRegressor', 'Major_Category': 'CatBoostClassifier', ...}
 ```
 
@@ -88,13 +89,13 @@ imputer.getmodelselection()
 
 ## API Reference
 
-| Method | Description |
-|--------|-------------|
-| `fit(df)` | Profile columns, train per-column models |
-| `transform(df)` | Impute using fitted models |
-| `fit_transform(df)` | Fit and impute in one pass (recommended) |
-| `getprofiles()` | Column profiles used during routing |
-| `getmodelselection()` | Model name chosen for each imputed column |
+| Interface Method | Return Signature | Functional Description |
+| :--- | :--- | :--- |
+| `fit(df)` | `self` | Profiles columns and trains tailored per-column machine learning architectures. |
+| `transform(df)` | `pd.DataFrame` | Executes sequential imputation calculations using previously fitted backend models. |
+| `fit_transform(df)` | `pd.DataFrame` | Runs profiling, model training, and cell imputation in a single optimized pass. |
+| `getprofiles()` | `dict` | Exposes the underlying metadata mapping generated during the dataset profiling phase. |
+| `getmodelselection()` | `dict` | Returns the specific machine learning model mapped to each target imputed column. |
 
 Constructor options: `columns`, `exclude`, `maskratio`, `randomstate`.
 
@@ -130,23 +131,11 @@ python tests/guard.py
 
 Generated on the bundled test dataset (`MASKRATIO=0.15`, `SEED=42`):
 
-| Plot | Description |
-|------|-------------|
-| [Imputation density](Assets/Plots/imputation_density.png) | KDE of observed vs post-imputation continuous distributions |
-| [Missingness heatmap](Assets/Plots/missingness_heatmap.png) | Feature completeness before and after imputation |
-| [Model allocation](Assets/Plots/model_allocation_grid.png) | Which backend was assigned per column |
-
-<p align="center">
-  <img src="Assets/Plots/imputation_density.png" alt="Imputation density comparison" width="800"/>
-</p>
-
-<p align="center">
-  <img src="Assets/Plots/missingness_heatmap.png" alt="Missingness heatmap before and after imputation" width="800"/>
-</p>
-
-<p align="center">
-  <img src="Assets/Plots/model_allocation_grid.png" alt="Per-column model allocation" width="800"/>
-</p>
+| Target Asset Graphic | Metric Visualization Type | Core Analytical Purpose |
+| :--- | :--- | :--- |
+| [Imputation Density](Assets/Plots/imputation_density.png) | Kernel Density Estimation (KDE) | Compares baseline vs post-imputation distributions to verify variance preservation. |
+| [Missingness Heatmap](Assets/Plots/missingness_heatmap.png) | Binary Feature Completeness Grid | Displays visual evidence of structural integrity before and after complete table imputation. |
+| [Model Allocation](Assets/Plots/model_allocation_grid.png) | Horizontal System Flow Chart | Provides full clarity into how columns were programmatically routed to distinct algorithms. |
 
 Regenerate locally:
 
@@ -174,3 +163,4 @@ python scripts/generate_plots.py
 ## License
 
 MIT
+```
