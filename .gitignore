@@ -13,6 +13,7 @@ build/
 venv/
 catboost_info/
 delete/
+Chat.md
 
 # Testing and Coverage
 .coverage
